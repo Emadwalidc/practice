@@ -40,7 +40,7 @@ async function getNumberOfLikes() {
 let isLiked = false;
 let likes = await getNumberOfLikes();
 
-app.get('/', async (req, res) => {
+app.get('/',  (req, res) => {
   res.render("index.ejs"); 
 });
 
