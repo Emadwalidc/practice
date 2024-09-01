@@ -1,0 +1,178 @@
+body {
+    margin: 0;
+}
+
+.hero {
+    background-color:#2e94b9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 75px;
+    margin: 5px;
+    padding: 50px;
+    border-radius: 5px;
+}
+
+.hero-writing {
+    color: #f0fbff;
+    text-align: center;
+}
+
+.hero-writing > h1{
+    font-size: 5rem;
+    margin: 0;
+    font-family: "Poetsen One", sans-serif;
+}
+
+.hero-writing > p{
+    margin: 0;
+    font-size: 2rem;
+    font-family: "Open Sans", sans-serif;
+}
+
+.hero-img > img {
+    height: 250px;
+    width: 300px;  
+}
+
+.second-box {
+    background-color: #acdcee;
+    margin: 5px;
+    padding: 50px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.second-box > .first-photos {
+    height: 500px;
+    width: 600px;
+    margin: 0;
+    padding: 0;
+}
+
+.second-box > .second-photos {
+    height: 250px;
+    width: 400px;
+    position: relative;
+    right: 200px;
+}
+
+.second-box > .second-writing {
+    text-align: center;
+    color: #303841;
+    display: inline-block;
+}
+
+.second-box > .second-writing > h2 {
+    font-size: 5rem;
+    font-family: "Poetsen One", sans-serif;
+}
+
+.second-box > .second-writing > p {
+    font-size: 2rem;
+    font-family: "Open Sans", sans-serif;
+}
+
+.third-box > h2 {
+    color: #2e94b9;
+    text-align: center;
+    font-size: 3rem;
+    font-family: "Poetsen One", sans-serif;
+}
+
+
+.third-box {
+    margin-bottom: 40px;
+}
+.third-box > .parent {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 30px;
+    width: 50%;
+    margin-left: 25%;
+}
+
+
+h3 {
+    color: #2e94b9; 
+    font-family: "Poetsen One", sans-serif;
+}
+
+.third-box > .parent > .cal-photo >img{
+    height: 200px;
+    width: 300px;
+}
+.third-box > .parent > .cooking-photo >img {
+    height: 200px;
+    width: 300px;
+}
+
+.third-box > .parent > .cal-text > p {
+    font-family: "Open Sans", sans-serif;
+    color: #303841;
+}
+
+.third-box > .parent > .cooking-text > p {
+    font-family: "Open Sans", sans-serif;
+    color: #303841;
+}
+
+.forth-box {
+    background-color: #2e94b9;
+    text-align: center;
+    padding: 35px 0 20px;
+    width: 100%;
+}
+
+.forth-box > a {
+    color: #303841;
+    margin: 30px;
+    text-decoration: none;
+    font-family: "Open Sans", sans-serif;
+    
+}
+
+.forth-box > p {
+    color: #f0fbff;
+    margin: 15px;
+    font-family: "Open Sans", sans-serif;
+}
+
+.like-button {
+    background-color: #2e94b9;
+    border: 0;
+    border-radius: 10px;
+    color: #f0fbff;
+    padding: 10px;
+}
+
+
+@media (max-width:768px) {
+
+    .third-box > .parent {
+        margin-left: 0;
+    }
+}
+
+@media (max-width:1140px) {
+
+    .second-box {
+        flex-direction: column;
+    }
+
+    .second-box >  .first-photos {
+        width: 100%;
+    }
+
+    .second-box > .second-photos {
+        width: 50%;
+        right: 0;
+        bottom: 125px;
+    }
+
+}

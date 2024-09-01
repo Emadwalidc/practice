@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emad Walid</title>
+    <link rel="stylesheet" href="./public/styles/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&family=Teko:wght@700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poetsen+One&family=Teko:wght@700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="first-box">
+        <div class="hero">
+            <div class="hero-writing">
+                <h1>I am Emad</h1>
+                <p>A web Devloper And Designer</p>
+            </div>
+            <div class="hero-img">
+                <img src="./public/images/computer.png" alt="A computer">
+            </div>
+        </div>
+    </div>
+
+    <div class="second-box">
+        <img src="./public/images/simon_game.png" alt="old design" class="first-photos">
+        <img src="./public/images/drum.png" alt="old design" class="second-photos">
+        <div class="second-writing">
+            <h2>Hello</h2>
+            <p>I am a web devloper.<br> And this is my work.</p>
+        </div>
+    </div>
+
+    <div class="third-box">
+        <h2>My hobbies</h2>
+        <div class="parent">
+            <div class="cal-photo"> <img src="./public/images/calisthenics_2000x.webp" alt="calisthenics photo"></div>
+            <div class="cal-text">
+                <h3>calisthenics</h3>
+
+                <p>My dream is to be a professional calisthenics athlete</p>
+                <form action="/like" method="post">
+                    <% if(locals.likes) { %>
+                    <button class="like-button" type="submit">Unlike</button>
+                    <p><%= locals.likes %> People liked this</p>
+                    <% } else {%>
+                        <button class="like-button" type="submit">like</button>
+                        <% } %>
+                </form>
+                
+            </div>
+            <div class="cooking-photo"><img src="./public/images/cooking.png" alt="cooking"></div>
+            <div class="cooking-text">
+                <h3>Cooking</h3>
+                <p>I enjoy cooking delicious meals</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="forth-box">
+        <a href="https://www.linkedin.com/in/%D8%B9%D9%85%D8%A7%D8%AF-%D9%88%D9%84%D9%8A%D8%AF-b76905251/">LinkedIn</a>
+        <a href="https://www.facebook.com/profile.php?id=100008155983584">Facebook</a>
+        <p>@Emad Walid</p>
+    </div>
+    
+
+    
+
+</body>
+</html>
+
+
