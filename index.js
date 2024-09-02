@@ -20,14 +20,14 @@ app.use(
 );
 
 const db = new pg.Client({
-  connectionString: process.env.DATABASE_URL || {
+    connectionString: process.env.DATABASE_URL || {
     user: process.env.PG_USER,
     host: process.env.PG_HOST,
     database: process.env.PG_DATABASE,
     password: process.env.PG_PASSWORD,
     port: process.env.PG_PORT,
-  },
-  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false, 
+   },
+    ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false, 
 });
 
 
@@ -46,15 +46,13 @@ async function getNumberOfLikes() {
   const result = await db.query("SELECT numberoflikes FROM likes");
   return result.rows[0].numberoflikes;
 }
+let likes = await getNumberOfLikes();
 
 app.get('/', async(req, res) => {
-  let likes = await getNumberOfLikes();
   res.render("index.ejs", { likes: likes, isLiked: req.session.isLiked });
 });
 
 app.post('/', async (req, res) => {
-  let likes = await getNumberOfLikes();
-
   if (!req.session.isLiked) {
     req.session.isLiked = true;
     likes++; 

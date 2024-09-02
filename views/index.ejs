@@ -48,12 +48,11 @@
                 <form method="post">
                     <% if(isLiked) { %>
                     <button class="like-button" type="submit">Unlike</button>
-                    <p><%= locals.likes %> People liked this</p>
                     <% } else {%>
                         <button class="like-button" type="submit">like</button>
                         <% } %>
                 </form>
-                
+                <p><%=likes %> People liked this</p>
             </div>
             <div class="cooking-photo"><img src="./public/images/cooking.png" alt="cooking"></div>
             <div class="cooking-text">
