@@ -2,12 +2,22 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import env from "dotenv";
+import session from "express-session";
 
 env.config(); 
 
 const app = express();
 const port = process.env.PORT || 3000; 
 
+app.set('trust proxy', 1);
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 1000 * 60 * 60* 24 * 30 * 12  }  
+  })
+);
 
 const db = new pg.Client({
   connectionString: process.env.DATABASE_URL || {
@@ -37,27 +47,25 @@ async function getNumberOfLikes() {
   return result.rows[0].numberoflikes;
 }
 
-let isLiked = false;
-let likes = await getNumberOfLikes();
-
-app.get('/',  (req, res) => {
-  res.render("index.ejs"); 
+app.get('/', async(req, res) => {
+  let likes = await getNumberOfLikes();
+  res.render("index.ejs", { likes: likes, isLiked: req.session.isLiked });
 });
 
-app.post('/like', async (req, res) => {
-  if (!isLiked) {
-    isLiked = true;
-    likes++;
-    await db.query(`UPDATE likes SET numberoflikes = $1`, [likes]);
-    console.log(likes);
-    res.render("index.ejs", { likes: likes });
+app.post('/', async (req, res) => {
+  let likes = await getNumberOfLikes();
+
+  if (!req.session.isLiked) {
+    req.session.isLiked = true;
+    likes++; 
   } else {
-    isLiked = false;
+    req.session.isLiked = false;
     likes--;
-    console.log(likes);
-    await db.query(`UPDATE likes SET numberoflikes = $1`, [likes]);
-    res.redirect("/");
   }
+  
+  await db.query(`UPDATE likes SET numberoflikes = $1`, [likes]);
+  console.log(likes);
+  res.redirect("/");
 });
 
 app.listen(port, '0.0.0.0',() => {

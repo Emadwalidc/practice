@@ -45,8 +45,8 @@
                 <h3>calisthenics</h3>
 
                 <p>My dream is to be a professional calisthenics athlete</p>
-                <form action="/like" method="post">
-                    <% if(locals.likes) { %>
+                <form method="post">
+                    <% if(isLiked) { %>
                     <button class="like-button" type="submit">Unlike</button>
                     <p><%= locals.likes %> People liked this</p>
                     <% } else {%>
