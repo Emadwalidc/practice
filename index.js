@@ -2,22 +2,12 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import env from "dotenv";
-import session from "express-session";
+import ip from "ip";
 
 env.config(); 
 
 const app = express();
 const port = process.env.PORT || 3000; 
-
-app.set('trust proxy', 1);
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false, maxAge: 1000 * 60 * 60* 24 * 30 * 12  }  
-  })
-);
 
 const db = new pg.Client({
     connectionString: process.env.DATABASE_URL || {
@@ -26,8 +16,8 @@ const db = new pg.Client({
     database: process.env.PG_DATABASE,
     password: process.env.PG_PASSWORD,
     port: process.env.PG_PORT,
-   },
-    ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false, 
+
+   },ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false, 
 });
 
 
@@ -39,29 +29,76 @@ db.connect(err => {
   }
 });
 
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-async function getNumberOfLikes() {
-  const result = await db.query("SELECT numberoflikes FROM likes");
-  return result.rows[0].numberoflikes;
+async function checkExist(ip, agent) {
+  try {
+    const result = await db.query(`SELECT * FROM likes WHERE IP_ADDRESS = $1 AND userAgent = $2`,[ip, agent]);
+    return result.rowCount > 0;
+  } catch (err) {
+    return false;
+  }
 }
-let likes = await getNumberOfLikes();
+
+async function checkLike(ip,agent) {
+  const result = await db.query(`SELECT liked FROM likes WHERE IP_ADDRESS = $1 AND userAgent = $2 LIMIT 1`,[ip, agent]);
+  return result.rows[0]?.liked;
+}
+
+async function getNumberOfLikes() {
+  const result = await db.query("SELECT COUNT(*) FROM likes WHERE liked = true");
+  return parseInt(result.rows[0].count, 10);
+}
+
+
+let isLiked;
+let likes;
+let exist;
 
 app.get('/', async(req, res) => {
-  res.render("index.ejs", { likes: likes, isLiked: req.session.isLiked });
+  const userIp = ip.address();
+  const userAgent = req.headers['user-agent'];
+
+  likes = await getNumberOfLikes();
+  exist = await checkExist(userIp,userAgent);
+
+  if(exist){
+    isLiked = await checkLike(userIp,userAgent);
+  } else {
+    isLiked = false;
+  }
+
+  res.render("index.ejs", { likes: likes, isLiked: isLiked });
 });
 
 app.post('/', async (req, res) => {
-  if (!req.session.isLiked) {
-    req.session.isLiked = true;
-    likes++; 
+  const userIp = ip.address();
+  const userAgent = req.headers['user-agent'];
+
+  likes = await getNumberOfLikes();
+  exist = await checkExist(userIp,userAgent);
+
+  if(exist){
+    isLiked = await checkLike(userIp,userAgent);
   } else {
-    req.session.isLiked = false;
-    likes--;
+    isLiked = false;
+  }
+  if (exist) {
+    if(isLiked){
+      isLiked = false;
+      await db.query(`UPDATE likes SET liked = $1 WHERE IP_ADDRESS = $2 AND userAgent = $3 `,[isLiked,userIp,userAgent]);
+    } else {
+      isLiked = true;
+      await db.query(`UPDATE likes SET liked = $1 WHERE IP_ADDRESS = $2 AND userAgent = $3 `,[isLiked,userIp,userAgent]);
+    }
+  } else {
+    isLiked = true;
+    await db.query(`INSERT INTO likes(IP_ADDRESS,userAgent,liked) VALUES($1,$2,$3)`,[userIp,userAgent,isLiked]);
   }
   
-  await db.query(`UPDATE likes SET numberoflikes = $1`, [likes]);
   console.log(likes);
   res.redirect("/");
 });
