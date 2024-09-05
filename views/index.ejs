@@ -45,14 +45,48 @@
                 <h3>calisthenics</h3>
 
                 <p>My dream is to be a professional calisthenics athlete</p>
-                <form method="post">
-                    <% if(isLiked) { %>
-                    <button class="like-button" type="submit">Unlike</button>
-                    <% } else {%>
-                        <button class="like-button" type="submit">like</button>
-                        <% } %>
-                </form>
-                <p><%=likes %> People liked this</p>
+                <div id="like">
+                    <form method="post">
+                        <% if(isLiked) { %>
+                        <button class="like-button" type="submit">Unlike</button>
+                        <% } else {%>
+                            <button class="like-button" type="submit">like</button>
+                            <% } %>
+                    </form>
+                    <p><%=likes %> People liked this</p>
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                      const likeButton = document.querySelector('.like-button');
+                      const likeCount = document.querySelector('#like p');
+                  
+                      likeButton.addEventListener('click', async (event) => {
+                        event.preventDefault(); 
+                        likeButton.classList.add('clicked');
+
+                        try {
+                            const response = await fetch('/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({})
+                            });
+                            const data = await response.json();
+                            likeButton.textContent = data.isLiked ? 'Unlike' : 'Like';
+                            likeCount.textContent = `${data.likes} people liked this`;
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
+
+                        likeButton.addEventListener('transitionend', () => {
+                            likeButton.classList.remove('clicked');
+                        }, { once: true });
+                        
+                        });
+
+                    });
+                  </script>
             </div>
             <div class="cooking-photo"><img src="./public/images/cooking.png" alt="cooking"></div>
             <div class="cooking-text">
@@ -73,5 +107,3 @@
 
 </body>
 </html>
-
-

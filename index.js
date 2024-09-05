@@ -2,7 +2,6 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import env from "dotenv";
-import ip from "ip";
 
 env.config(); 
 
@@ -10,14 +9,11 @@ const app = express();
 const port = process.env.PORT || 3000; 
 
 const db = new pg.Client({
-    connectionString: process.env.DATABASE_URL || {
     user: process.env.PG_USER,
     host: process.env.PG_HOST,
     database: process.env.PG_DATABASE,
     password: process.env.PG_PASSWORD,
     port: process.env.PG_PORT,
-
-   },ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false, 
 });
 
 
@@ -59,7 +55,7 @@ let likes;
 let exist;
 
 app.get('/', async(req, res) => {
-  const userIp = ip.address();
+  const userIp = req.ip || req.headers['x-forwarded-for'];
   const userAgent = req.headers['user-agent'];
 
   likes = await getNumberOfLikes();
@@ -71,11 +67,18 @@ app.get('/', async(req, res) => {
     isLiked = false;
   }
 
-  res.render("index.ejs", { likes: likes, isLiked: isLiked });
+  const data = {
+    isLiked: isLiked,
+    likes: likes
+  };
+
+  res.render("index.ejs", data);
 });
 
+
+
 app.post('/', async (req, res) => {
-  const userIp = ip.address();
+  const userIp = req.ip || req.headers['x-forwarded-for'];
   const userAgent = req.headers['user-agent'];
 
   likes = await getNumberOfLikes();
@@ -98,9 +101,14 @@ app.post('/', async (req, res) => {
     isLiked = true;
     await db.query(`INSERT INTO likes(IP_ADDRESS,userAgent,liked) VALUES($1,$2,$3)`,[userIp,userAgent,isLiked]);
   }
-  
-  console.log(likes);
-  res.redirect("/");
+
+  likes = await getNumberOfLikes();
+  const data = {
+    isLiked: isLiked,
+    likes: likes
+  };
+
+  res.json(data);
 });
 
 app.listen(port, '0.0.0.0',() => {
