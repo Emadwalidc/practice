@@ -55,38 +55,6 @@
                     </form>
                     <p><%=likes %> People liked this</p>
                 </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                      const likeButton = document.querySelector('.like-button');
-                      const likeCount = document.querySelector('#like p');
-                  
-                      likeButton.addEventListener('click', async (event) => {
-                        event.preventDefault(); 
-                        likeButton.classList.add('clicked');
-
-                        try {
-                            const response = await fetch('/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({})
-                            });
-                            const data = await response.json();
-                            likeButton.textContent = data.isLiked ? 'Unlike' : 'Like';
-                            likeCount.textContent = `${data.likes} people liked this`;
-                        } catch (error) {
-                            console.error('Error:', error);
-                        }
-
-                        likeButton.addEventListener('transitionend', () => {
-                            likeButton.classList.remove('clicked');
-                        }, { once: true });
-                        
-                        });
-
-                    });
-                  </script>
             </div>
             <div class="cooking-photo"><img src="./public/images/cooking.png" alt="cooking"></div>
             <div class="cooking-text">
@@ -96,6 +64,29 @@
         </div>
     </div>
 
+    <hr>
+
+    <div class="contact-me">
+        <h2>Contact me</h2>
+        <form action="/email" method="post">
+            <div class="first-name">
+                <label for="fname" >First name</label><br>
+                <input type="text" id="fname" name="fname" required placeholder="Chesly">
+            </div>
+            <div class="last-name">
+                <label for="lname">Last name</label><br>
+                <input type="text" id="lname" name="lname" required placeholder="Scarlett">
+            </div>
+            <br>
+            <label for="email">Enter your email</label><br>
+            <input type="email" id="email" name="email" required placeholder="example@something.com"><br>
+            <label for="message">Entre your message</label>
+            <textarea type="text" id="message" name="message" required placeholder="Write your message here"></textarea>
+            <input type="submit" value="Submit">
+        </form>
+
+    </div>
+
     <div class="forth-box">
         <a href="https://www.linkedin.com/in/%D8%B9%D9%85%D8%A7%D8%AF-%D9%88%D9%84%D9%8A%D8%AF-b76905251/">LinkedIn</a>
         <a href="https://www.facebook.com/profile.php?id=100008155983584">Facebook</a>
@@ -103,7 +94,44 @@
     </div>
     
 
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const likeButton = document.querySelector('.like-button');
+          const likeCount = document.querySelector('#like p');
+      
+          likeButton.addEventListener('click', async (event) => {
+            event.preventDefault(); 
+            likeButton.classList.add('clicked');
+
+            try {
+                const response = await fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+                });
+                const data = await response.json();
+                likeButton.textContent = data.isLiked ? 'Unlike' : 'Like';
+                likeCount.textContent = `${data.likes} people liked this`;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
+            likeButton.addEventListener('transitionend', () => {
+                likeButton.classList.remove('clicked');
+            }, { once: true });
+            
+            });
+
+            const submitMessage = document.querySelector('.contact-me form');
+
+            submitMessage.addEventListener('submit', (event) => {
+                alert("Your message has been received");
+            });
+
+        });
+      </script> 
 
 </body>
 </html>

@@ -9,13 +9,13 @@ const app = express();
 const port = process.env.PORT || 3000; 
 
 const db = new pg.Client({
-    connectionString: process.env.DATABASE_URL || {
+    //connectionString: process.env.DATABASE_URL || {
     user: process.env.PG_USER,
     host: process.env.PG_HOST,
     database: process.env.PG_DATABASE,
     password: process.env.PG_PASSWORD,
     port: process.env.PG_PORT,
-  },ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false, 
+ // },ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false, 
 });
 
 
@@ -112,6 +112,16 @@ app.post('/', async (req, res) => {
 
   res.json(data);
 });
+
+app.post('/email', async (req, res) => {
+  const { fname: fName, lname: lName, email, message } = req.body;
+
+  await db.query(`INSERT INTO contact(fName, lName, email, message) VALUES ($1, $2, $3, $4)`, [fName, lName, email, message]);
+
+  res.redirect('/');
+   
+});
+
 
 app.listen(port, '0.0.0.0',() => {
   console.log(`App is listening on port ${port}`);
